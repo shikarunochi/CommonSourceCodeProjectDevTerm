@@ -1,0 +1,43 @@
+ CDEBUGFLAGS+=-D_X1TURBO
+ UOBJS+= vm/ay_3_891x.o \
+vm/datarec.o \
+vm/disk.o \
+vm/event.o \
+vm/fmgen/fmgen.o \
+vm/fmgen/fmtimer.o \
+vm/fmgen/opm.o \
+vm/fmgen/opna.o \
+vm/fmgen/psg.o \
+vm/harddisk.o \
+vm/hd46505.o \
+vm/i8255.o \
+vm/io.o \
+vm/mb8877.o \
+vm/mcs48.o \
+vm/mz1p17.o \
+vm/noise.o \
+vm/prnfile.o \
+vm/scsi_dev.o \
+vm/scsi_hdd.o \
+vm/scsi_host.o \
+vm/upd1990a.o \
+vm/x1/cz8rb.o \
+vm/x1/display.o \
+vm/x1/emm.o \
+vm/x1/floppy.o \
+vm/x1/iobus.o \
+vm/x1/joystick.o \
+vm/x1/keyboard.o \
+vm/x1/memory.o \
+vm/x1/mouse.o \
+vm/x1/psub.o \
+vm/x1/sasi.o \
+vm/x1/sub.o \
+vm/x1/x1.o \
+vm/ym2151.o \
+vm/z80.o \
+vm/z80ctc.o \
+vm/z80dma.o \
+vm/z80sio.o 
+
+TARGET_NAME= emuX1turbo

@@ -1,0 +1,20 @@
+ CDEBUGFLAGS+=-D_MZ700 
+ UOBJS+= vm/and.o \
+		vm/datarec.o \
+		vm/event.o \
+		vm/i8253.o \
+		vm/i8255.o \
+		vm/io.o \
+		vm/noise.o \
+		vm/pcm1bit.o \
+		vm/z80.o \
+		vm/mz700/cmos.o \
+		vm/mz700/emm.o \
+		vm/mz700/joystick.o \
+		vm/mz700/kanji.o \
+		vm/mz700/keyboard.o \
+		vm/mz700/memory.o \
+		vm/mz700/mz700.o \
+		vm/mz700/ramfile.o 
+
+TARGET_NAME= emuZ700

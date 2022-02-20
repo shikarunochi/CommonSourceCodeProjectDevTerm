@@ -1,0 +1,41 @@
+ CDEBUGFLAGS+=-D_FM77
+
+UOBJS+= vm/and.o \
+		vm/ay_3_891x.o \
+		vm/datarec.o \
+		vm/disk.o \
+		vm/event.o \
+		vm/fm7/display.o \
+		vm/fm7/dummydevice.o \
+		vm/fm7/floppy.o \
+		vm/fm7/floppy_2HD.o \
+		vm/fm7/fm7.o \
+		vm/fm7/fm7_mainio.o \
+		vm/fm7/fm7_mainmem.o \
+		vm/fm7/jcommcard.o \
+		vm/fm7/joystick.o \
+		vm/fm7/kanjirom.o \
+		vm/fm7/keyboard.o \
+		vm/fm7/mainmem_mmr.o \
+		vm/fm7/mainmem_page2.o \
+		vm/fm7/mainmem_readseq.o \
+		vm/fm7/mainmem_utils.o \
+		vm/fm7/mainmem_writeseq.o \
+		vm/fm7/sound.o \
+		vm/fm7/vram.o \
+		vm/fmgen/fmgen.o \
+		vm/fmgen/fmtimer.o \
+		vm/fmgen/opna.o \
+		vm/fmgen/psg.o \
+		vm/i8251.o \
+		vm/mb8877.o \
+		vm/mc6809.o \
+		vm/mc6809_base.o \
+		vm/memory.o \
+		vm/noise.o \
+		vm/pcm1bit.o \
+		vm/prnfile.o \
+		vm/ym2203.o \
+		vm/z80.o 
+
+TARGET_NAME= emuFM77

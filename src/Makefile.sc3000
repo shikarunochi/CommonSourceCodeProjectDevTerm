@@ -1,0 +1,18 @@
+ CDEBUGFLAGS+=-D_SC3000 
+
+UOBJS+= vm/datarec.o \
+        vm/disk.o \
+        vm/event.o \
+        vm/i8251.o \
+        vm/i8255.o \
+        vm/io.o \
+        vm/noise.o \
+        vm/sn76489an.o \
+        vm/tms9918a.o \
+        vm/upd765a.o \
+        vm/z80.o \
+        vm/sc3000/keyboard.o \
+        vm/sc3000/memory.o \
+        vm/sc3000/sc3000.o 
+        
+TARGET_NAME= emuSC3000
