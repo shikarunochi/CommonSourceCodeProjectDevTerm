@@ -55,13 +55,13 @@ void OSD::initialize_input()
 	    joy = SDL_JoystickOpen(0);
 	
 	    if (joy) {
-        	printf("ジョイスティック 0 を開いた\n");
+        	printf("Open JoyStick 0\n");
         	printf("名前: %s\n", SDL_JoystickNameForIndex(0));
         	printf("軸の数: %d\n", SDL_JoystickNumAxes(joy));
         	printf("ボタンの数: %d\n", SDL_JoystickNumButtons(joy));
         	printf("ボールの数: %d\n", SDL_JoystickNumBalls(joy));
     	} else {
-	        printf("ジョイスティック 0 を開けなかった\n");
+	        printf("Can't open JoySitck 0\n");
     	}
 	}
 #endif	

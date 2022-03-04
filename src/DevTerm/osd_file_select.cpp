@@ -31,8 +31,8 @@ void OSD::selectFile(int selectType){
         caption,
         NULL,
         GTK_FILE_CHOOSER_ACTION_OPEN,
-        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-        GTK_STOCK_OPEN, GTK_RESPONSE_OK,
+        ("Cancel"), GTK_RESPONSE_CANCEL,
+        ("Open"), GTK_RESPONSE_ACCEPT,
         NULL
     );
 	//gtk_window_set_resizable  (GTK_WINDOW (pFileSelection), TRUE);
@@ -54,7 +54,7 @@ void OSD::selectFile(int selectType){
 	
 	gint res = gtk_dialog_run(GTK_DIALOG(pFileSelection));
 	char *filename = NULL;
-    if (res == GTK_RESPONSE_OK)
+    if (res == GTK_RESPONSE_ACCEPT)
     {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER (pFileSelection);
         filename = gtk_file_chooser_get_filename (chooser);

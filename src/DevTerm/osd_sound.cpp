@@ -29,33 +29,25 @@ void OSD::update_sound(int* extra_frames){
 	if(soundEnable == false){
         return;
     }
+	if(inputSoundBufferPos > outputSoundBufferPos){
+        return;
+    }
 
 	SDL_LockAudio();
 
     *extra_frames = 0;
     sound_muted = false;
     if (sound_available) {
+    	inputSoundBufferPos=0;
+        outputSoundBufferPos=0;
         uint16_t *sound_buffer = vm->create_sound(extra_frames);
-        int length = sound_samples;// * sizeof(uint16_t); // stereo
-    	if(length > 0){
-    		//printf("update:start inputSoundBufferPos:%d outputSoundBufferPos:%d\n",inputSoundBufferPos,outputSoundBufferPos);
-    		int maxLength = 0;
-    		if(inputSoundBufferPos >= outputSoundBufferPos){
-    			maxLength = soundBufferLength - ( inputSoundBufferPos - outputSoundBufferPos) - 1;
-    		}else{
-    			maxLength = outputSoundBufferPos - inputSoundBufferPos - 1;
-    		}
-	        for(int index = 0;index < length;index++){
-	            soundBuffer[inputSoundBufferPos] = sound_buffer[index];
-	            inputSoundBufferPos++;
-	        	if(inputSoundBufferPos >= soundBufferLength){
-	        		inputSoundBufferPos = 0;
-	        	}
-	            if(index >= maxLength){
-	                break;
-	            }
-	        }
-    		//printf("update:end inputSoundBufferPos:%d outputSoundBufferPos:%d length:%d maxLength:%d\n",inputSoundBufferPos,outputSoundBufferPos,length,maxLength);
+    	int length = sound_samples * 2; // stereo
+        for(int index = 0;index < length;index++){
+            soundBuffer[inputSoundBufferPos] = sound_buffer[index];
+            inputSoundBufferPos++;
+            if(inputSoundBufferPos >= soundBufferLength){
+                break;
+            }
     	}
     }
 	
@@ -64,16 +56,11 @@ void OSD::update_sound(int* extra_frames){
 }
 
 void OSD::reset_sound(){
-	for(int index= 0;index <  soundBufferLength;index++){
-        soundBuffer[index] = 0;
-    }
-    inputSoundBufferPos = 0;
+	memset(soundBuffer, 0, sizeof(soundBuffer));
+	inputSoundBufferPos = 0;
     outputSoundBufferPos = 0;
 }
 
-
-#define DEFAULT_AUDIO_BUFFER	120
-#define DEFAULT_AUDIO_UNIT		15
 void OSD::initialize_sound(int rate, int samples){
 #ifdef ENABLE_SOUND
 	inputSoundBufferPos = 0;
@@ -88,7 +75,8 @@ void OSD::initialize_sound(int rate, int samples){
 	printf("samples=%d\n",samples);
 	soundBufferLength = samples * 2;
 	soundBuffer = (uint16_t*)malloc(soundBufferLength * sizeof(uint16_t));
-	memset(soundBuffer,0,soundBufferLength);
+
+	memset(soundBuffer, 0, sizeof(soundBuffer));
 	
 	// parameter
 	Desired.freq = rate;
@@ -126,22 +114,17 @@ void OSD::CommonCallback(void *userdata, Uint8 *stream, int len)
 	}
 }
 
-//
-// Callback()
-// callback to fill buffer
-//
 void OSD::Callback(Uint8 *stream, int len)
 {
-    if(inputSoundBufferPos == outputSoundBufferPos){
+    if(inputSoundBufferPos <= outputSoundBufferPos){
 		return;
     }
-		//printf("callbackStart inputSoundBufferPos:%d outputSoundBufferPos:%d\n",inputSoundBufferPos,outputSoundBufferPos);	
+	
+	
+	//printf("callbackStart inputSoundBufferPos:%d outputSoundBufferPos:%d\n",inputSoundBufferPos,outputSoundBufferPos);	
 	int writeBufferSize = 0;
-	if(inputSoundBufferPos > outputSoundBufferPos){
-    	writeBufferSize = inputSoundBufferPos - outputSoundBufferPos;
-	}else{
-		writeBufferSize = soundBufferLength - (outputSoundBufferPos - inputSoundBufferPos);
-	}
+    writeBufferSize = inputSoundBufferPos - outputSoundBufferPos;
+	
 	//printf("WriteBufferSize:%d Len:%d\n",writeBufferSize,len);
 	int zeroBufferSize = 0;
 	int framesize = len / 2;
@@ -151,18 +134,15 @@ void OSD::Callback(Uint8 *stream, int len)
 	 Uint16 *frames = (Uint16 *)stream;
 	//printf("writeBufferSize: %d inputSoundBufferPos:%d outputSoundBufferPos:%d\n",writeBufferSize, inputSoundBufferPos,outputSoundBufferPos);
     for (int i = 0; i < writeBufferSize; i++) {
-        if(soundBuffer[outputSoundBufferPos] <= INT_MAX / 2) {
-            frames[i] = (Uint16) soundBuffer[outputSoundBufferPos] / 2 ;
-        }else{
-           frames[i] = (Uint16)(-soundBuffer[outputSoundBufferPos] / 2);
-        }
+        frames[i] = (Uint16) soundBuffer[outputSoundBufferPos]  ;
         outputSoundBufferPos++;
-        if(outputSoundBufferPos >= soundBufferLength){
-            outputSoundBufferPos = 0;
+        if(outputSoundBufferPos + 1 >= inputSoundBufferPos){
+        	inputSoundBufferPos = 0;
+			outputSoundBufferPos = 0;
+        	break;
         }
     }
 
-		
 	//printf("callbackEnd inputSoundBufferPos:%d outputSoundBufferPos:%d\n",inputSoundBufferPos,outputSoundBufferPos);
 }
 
@@ -179,3 +159,5 @@ void OSD::release_sound(){
 		soundBuffer = NULL;
 	}
 }
+
+//https://gist.github.com/armornick/3447121

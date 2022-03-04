@@ -53,10 +53,6 @@ void OSD::initialize_screen()
 
 	printf("init sdl\n");
 	SDL_Init(SDL_INIT_EVERYTHING);
-	//SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT*3, 32, SDL_HWSURFACE | SDL_DOUBLEBUF );
-	printf("SCREEN_WIDTH:%d, SCREEN_HEIGHT:%d, WINDOW_WIDTH:%d, WINDOW_HEIGHT:%d, WINDOW_WIDTH_ASPECT:%d, WINDOW_HEIGHT_ASPECT:%d\n",
-		SCREEN_WIDTH,SCREEN_HEIGHT,WINDOW_WIDTH,WINDOW_HEIGHT,WINDOW_WIDTH_ASPECT,WINDOW_HEIGHT_ASPECT);
-	//videoSurface = SDL_GetVideoSurface();
 
 	//適当判断で拡大
 	int Y_scale = 1;
@@ -71,12 +67,12 @@ void OSD::initialize_screen()
 	printf("SCREEN_WIDTH:%d, SCREEN_HEIGHT:%d, WINDOW_WIDTH:%d, WINDOW_HEIGHT:%d, WINDOW_WIDTH_ASPECT:%d, WINDOW_HEIGHT_ASPECT:%d X_scale:%d Y_Scale:%d\n",
 		SCREEN_WIDTH,SCREEN_HEIGHT,WINDOW_WIDTH,WINDOW_HEIGHT,WINDOW_WIDTH_ASPECT,WINDOW_HEIGHT_ASPECT, X_scale, Y_scale);
 	
-	
     sdlWindow = SDL_CreateWindow(CONFIG_NAME,
                                  SDL_WINDOWPOS_UNDEFINED,
                                  SDL_WINDOWPOS_UNDEFINED,
-                                 SCREEN_WIDTH * X_scale, SCREEN_WIDTH * Y_scale, SDL_WINDOW_RESIZABLE);//
+                                 SCREEN_WIDTH * X_scale, WINDOW_HEIGHT * Y_scale, SDL_WINDOW_RESIZABLE);//
                                  //SDL_WINDOW_FULLSCREEN_DESKTOP);
+
 	sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0);
 	SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 255);
     SDL_RenderClear(sdlRenderer);
@@ -145,9 +141,9 @@ int OSD::draw_screen()
 	if(vm->is_tape_playing(0)){
 		int tapePosition = vm->get_tape_position(0);
 		if(tapePosition > 0){
-			scrntype_t* screenBuffer = get_vm_screen_buffer(vm_screen_height-1);
-			for(int x = 0;x < vm_screen_width * sizeof (scrntype_t);x++){
-				if(x * 100 / vm_screen_width * sizeof (scrntype_t) < tapePosition){
+			scrntype_t* screenBuffer = get_vm_screen_buffer(vm_window_height-1);
+			for(int x = 0;x < vm_window_width * sizeof (scrntype_t);x++){
+				if(x * 100 / vm_window_width * sizeof (scrntype_t) < tapePosition){
 					*(screenBuffer + x) = 0x11FF11;
 				}
 			}

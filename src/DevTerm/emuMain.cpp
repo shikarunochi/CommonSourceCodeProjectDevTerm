@@ -34,13 +34,11 @@
 EMU *emu;
 static int64_t start_ms;
 
-DWORD timeGetTime() {
+
+DWORD timeGetTime() { //ミリセカンドを返す
     timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    //return ts.tv_sec * 1000000L + ts.tv_nsec / 1000;
-    //return ts.tv_sec * 1000L + ts.tv_nsec / 1000000;
-	//return  (((int64_t) ts.tv_sec) * 1000000000LL + ts.tv_nsec) / 1000000;
-	 return ts.tv_sec + (double)ts.tv_nsec*1e-6;
+	return ts.tv_sec * 1000L + ts.tv_nsec / 1000000L;
 }
 
 int main(int argc,char *argv[]){
@@ -50,10 +48,7 @@ int main(int argc,char *argv[]){
 	
 	emu = new EMU();
 	emu->reset();
-	struct timespec now;
-    clock_gettime(CLOCK_MONOTONIC, &now);
-    //start_ms = (((int64_t) now.tv_sec) * 1000000000LL + now.tv_nsec) / 1000000;
-	start_ms =  now.tv_sec + (double)now.tv_nsec*1e-6;
+
 	int total_frames = 0, draw_frames = 0, skip_frames = 0;
     DWORD next_time = 0;
     bool prev_skip = false;
@@ -61,7 +56,8 @@ int main(int argc,char *argv[]){
     DWORD update_status_bar_time = 0;
     DWORD disable_screen_saver_time = 0;
     bool needDraw = false;
-    while (1) {
+
+	while (1) {
         if (emu) {
             // drive machine
             int run_frames = emu->run();
@@ -71,20 +67,21 @@ int main(int argc,char *argv[]){
             int sleep_period = 0;
             bool now_skip = (config.full_speed || emu->is_frame_skippable()) &&
                             !emu->is_video_recording() && !emu->is_sound_recording();
-
+        	
             if ((prev_skip && !now_skip) || next_time == 0) {
                 next_time = timeGetTime();
             }
             if (!now_skip) {
                 static int accum = 0;
-                accum += emu->get_frame_interval();
+				int frameInterval = emu->get_frame_interval();
+                accum += frameInterval;
                 int interval = accum >> 10;
                 accum -= interval << 10;
-                next_time += interval;
+            	next_time += (DWORD)interval;
             }
             prev_skip = now_skip;
 
-            if (next_time > timeGetTime()) {
+            if (next_time >  timeGetTime()) {
                 // update window if enough time
                 draw_frames += emu->draw_screen();
                 needDraw = true;
@@ -101,7 +98,8 @@ int main(int argc,char *argv[]){
                 skip_frames = 0;
                 next_time = timeGetTime();
             }
-            usleep(sleep_period);
+        	
+            usleep(sleep_period * 1000);
         	//SDL_Delay(sleep_period);
 
             // calc frame rate

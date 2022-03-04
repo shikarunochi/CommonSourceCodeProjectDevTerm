@@ -28,10 +28,6 @@ void OSD::initialize(int rate, int samples)
 	initialize_input();
 	initialize_screen();
 	initialize_sound(rate, samples);
-#ifdef USE_PRINTER
-	//DevTerm プリンタへ出力
-	config.printer_type = 1;
-#endif
 }
 
 void OSD::release()
