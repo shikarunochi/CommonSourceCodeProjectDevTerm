@@ -256,6 +256,8 @@ private:
 		DWORD dwButtonsMask;
 	} joy_caps[4];
 	bool joy_to_key_status[256];
+	
+	SDL_Joystick *joy;
 #endif
 	
 #ifdef USE_MOUSE
@@ -652,6 +654,7 @@ public:
 	bool fullScreen;
 	
 	void selectFile(int fileType);
+	void fileSelectDialog();
 	
 	//sound
 	void Close();

@@ -22,13 +22,6 @@
 #include "DevTermKeyCode.h"
 #include "../emu.h"
 
-#define get_joy_range(min_value, max_value, lo_value, hi_value) \
-{ \
-	uint64_t center = ((uint64_t)min_value + (uint64_t)max_value) / 2; \
-	lo_value = (DWORD)((center + (uint64_t)min_value) / 2); \
-	hi_value = (DWORD)((center + (uint64_t)max_value) / 2); \
-}
-
 void OSD::initialize_input()
 {	// initialize status
 	memset(key_status, 0, sizeof(key_status));
@@ -48,7 +41,7 @@ void OSD::initialize_input()
 	//http://sdl2referencejp.osdn.jp/SDL_JoystickOpen.html
 	// initialize joysticks
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-	SDL_Joystick *joy;
+
 	// ジョイスティックが存在するかチェックする
 	if (SDL_NumJoysticks() > 0) {
 	    // ジョイスティックを開く
@@ -67,11 +60,11 @@ void OSD::initialize_input()
 #endif	
 	
 	//機種ごとのカスタマイズ
-#if defined(_MZ700) || defined(_MZ80K)
+#if defined(_MZ700) || defined(_MZ80K)||defined(_MZ1200)|| defined(_MZ1500)
 	DevTermKeyCode[0x8] = VK_DELETE; //BS → DEL
 	DevTermKeyCode[0x1b] = VK_BACK; //ESC→BS(=BREAK)
 #endif
-#if defined(_MZ80K)
+#if defined(_MZ80K)||defined(_MZ1200)
 	DevTermKeyCode[0x60] = VK_OEM_3; //'→=
 #endif
 	
@@ -79,22 +72,13 @@ void OSD::initialize_input()
 
 void OSD::release_input()
 {
-
+   if (SDL_JoystickGetAttached(joy)) {
+        SDL_JoystickClose(joy);
+    }
 }
 
 void OSD::update_input()
 {
-	static const uint32_t dir[8] = {
-		0x10000000 + 0x00000000,
-		0x10000000 + 0x20000000,
-		0x00000000 + 0x20000000,
-		0x40000000 + 0x20000000,
-		0x40000000 + 0x00000000,
-		0x40000000 + 0x80000000,
-		0x00000000 + 0x80000000,
-		0x10000000 + 0x80000000,
-	};
-	
 	SDL_Event ev;
 	SDL_PollEvent(&ev);
 	int keyCode = ev.key.keysym.sym;
@@ -119,7 +103,7 @@ void OSD::update_input()
 			if(vmKeyCode > 0){
 				key_down_native(vmKeyCode,false);
 			}
-			printf("keyDown:%x:%x\n",keyCode,vmKeyCode);
+			//printf("keyDown:%x:%x\n",keyCode,vmKeyCode);
 		}
 		break;
 	case SDL_KEYUP:
@@ -133,7 +117,7 @@ void OSD::update_input()
 			if(vmKeyCode > 0){
 				key_up_native(vmKeyCode);
 			}
-			printf("keyUp:%x:%x\n",keyCode,vmKeyCode);
+			//printf("keyUp:%x:%x\n",keyCode,vmKeyCode);
 		}
 		break;
 		
@@ -189,13 +173,13 @@ void OSD::update_input()
 */
 		//ボタン
 		case SDL_JOYBUTTONDOWN:
-		    printf("joyButtonDown:%d\n",ev.jbutton.button);
-			joy_status[0] |= dir[ev.jbutton.button & 7];
+		    //printf("joyButtonDown:%d\n",ev.jbutton.button);
+			joy_status[0] |= 1 << (ev.jbutton.button + 4);
 		
 		break;
 		case SDL_JOYBUTTONUP:
-			printf("joyButtonUp:%d\n",ev.jbutton.button);
-			joy_status[0] &= ~dir[ev.jbutton.button & 7];
+			//printf("joyButtonUp:%d\n",ev.jbutton.button);
+		joy_status[0] &= ~(1 << (ev.jbutton.button + 4));
 		break;
 #endif		
 	}	
@@ -309,7 +293,6 @@ void OSD::key_up(int code, bool extended)
 void OSD::key_down_native(int code, bool repeat)
 {
 	//LOGI("keyDown: %d", code);
-	key_status[code] = 0x80;
 
 	uint8_t prev_shift = key_status[VK_SHIFT];
 	uint8_t prev_control = key_status[VK_CONTROL];
@@ -333,36 +316,52 @@ void OSD::key_down_native(int code, bool repeat)
 		}
 	}
 	
-	if(key_status[VK_APPS] == 0x80 && code == VK_RETURN){
-		toggleWindowFullscreen();
-		return;
+	if(key_status[VK_APPS] == 0x80){ //VK_APPS = CMD KEY
+		if(code == VK_RETURN){
+			toggleWindowFullscreen();
+			return;
+		}
+		if(code == 0x51){ //Q
+			EMU* emu = vm->getEmu();
+			emu->request_exit();
+			return;
+		}
+		if(code == 0x31){ //1
+			selectFile(1);
+			return;
+		}
+		if(code == 0x32){ //2
+			selectFile(2);
+			return;
+		}
+		if(code == 0x33){ //3
+			selectFile(3);
+			return;
+		}
+		if(code == 0x34){ //4
+			selectFile(4);
+			return;
+		}
+		if(code == 0x35){ //5
+			selectFile(5);
+			return;
+		}
+		if(code == 0x52){ //R
+			vm->reset();
+			return;
+		}
+		if(code == 0x46){ //F
+			fileSelectDialog();
+			return;
+		}
+	//	if(code == 0x50){ //P
+	//		vm->push_play(0);
+	//		printf("PushPlay\n");
+	//		return;
+	//	}
 	}
-	if(key_status[VK_APPS] == 0x80 && code == 0x51){ //Q
-		EMU* emu = vm->getEmu();
-		emu->request_exit();
-		return;
-	}
-	if(key_status[VK_APPS] == 0x80 && code == 0x31){ //1
-		selectFile(1);
-		return;
-	}
-	if(key_status[VK_APPS] == 0x80 && code == 0x32){ //2
-		selectFile(2);
-		return;
-	}
-	if(key_status[VK_APPS] == 0x80 && code == 0x33){ //3
-		selectFile(3);
-		return;
-	}
-	if(key_status[VK_APPS] == 0x80 && code == 0x52){ //R
-		vm->reset();
-		return;
-	}
-	if(key_status[VK_APPS] == 0x80 && code == 0x50){ //P
-		vm->push_play(0);
-		printf("PushPlay\n");
-		return;
-	}
+	
+	key_status[code] = 0x80;
 	vm->key_down(code, repeat);
 }
 

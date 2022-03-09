@@ -17,12 +17,19 @@
 //https://www.exodabe.com/20170806488.html
 void OSD::selectFile(int selectType){
 	char caption[128];
-	if(selectType == 1){
-		sprintf(caption,"Select Tape Image File");
-	}else if(selectType == 2){
-		sprintf(caption,"Select DISK:1 Image File");
-	}else{
-		sprintf(caption,"Select Cartridge Image File");
+	switch(selectType){
+	case 1:
+		sprintf(caption,"Select DISK[1] Image File");break;
+	case 2:
+		sprintf(caption,"Select DISK[2] Image File");break;
+	case 3:
+		sprintf(caption,"Select TAPE Image File");break;
+	case 4:
+		sprintf(caption,"Select CARTRIDGE Image File");break;
+	case 5:
+		sprintf(caption,"Select QuickDisk Image File");break;
+	default:
+		return;
 	}
 	
     gtk_init(0, NULL);
@@ -67,7 +74,12 @@ void OSD::selectFile(int selectType){
 	}
 	if(filename != NULL){
         printf("Select: %s\n",filename);
-		if(selectType == 1){
+		switch(selectType){
+		case 1:
+			vm->open_floppy_disk(0, filename ,0);break;
+		case 2:
+			vm->open_floppy_disk(1, filename ,0);break;
+		case 3:
             if (vm->is_tape_inserted(0)) {
             	vm->push_stop(0);
                 vm->close_tape(0);
@@ -76,14 +88,65 @@ void OSD::selectFile(int selectType){
             }else{
     			vm->play_tape(0, filename);
             }
-		}else if(selectType == 2){
-			vm->open_floppy_disk(0, filename ,0);
-		}else{
+			break;
+		case 4:
 			vm->open_cart(0, filename);
+			break;
+		case 5:
+			vm->open_quick_disk(0, filename);
 		}
 		g_free (filename);	
 	}
 }
+
+void OSD::fileSelectDialog(){
+	gtk_init(0, NULL);
+	GtkDialogFlags flags = GTK_DIALOG_DESTROY_WITH_PARENT;
+ 	GtkWidget *dialog = gtk_dialog_new_with_buttons ("FILE SELECT",
+                                       NULL,
+                                       flags,
+ 		                               //("CANCEL"),
+                                       //GTK_RESPONSE_NONE,
+                                       NULL);
+	#ifdef USE_FLOPPY_DISK
+	gtk_dialog_add_button (GTK_DIALOG(dialog),
+                       "DISK 1",
+                       1);
+
+	gtk_dialog_add_button (GTK_DIALOG(dialog),
+                       "DISK 2",
+                       2);
+	#endif
+	#ifdef USE_TAPE 
+	gtk_dialog_add_button (GTK_DIALOG(dialog),
+                       "TAPE",
+                       3);
+	#endif
+	#ifdef USE_CART
+	gtk_dialog_add_button (GTK_DIALOG(dialog),
+                       "CARTRIDGE",
+                       4);
+	#endif
+	#ifdef USE_QUICK_DISK
+	gtk_dialog_add_button (GTK_DIALOG(dialog),
+                       "QD",
+                       5);
+	#endif
+	gint res = gtk_dialog_run(GTK_DIALOG(dialog));
+	printf("dialog result:%d\n",res);
+	
+	gtk_widget_destroy(dialog);
+
+	while (gtk_events_pending ()){
+        gtk_main_iteration ();
+	}
+	
+	if(res > 1){
+		selectFile(res);
+	}
+	
+}
+
 
 /*
 void OSD::selectFile(int fileType){
