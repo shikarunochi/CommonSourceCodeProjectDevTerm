@@ -316,7 +316,7 @@ void OSD::key_down_native(int code, bool repeat)
 		}
 	}
 	
-	if(key_status[VK_APPS] == 0x80){ //VK_APPS = CMD KEY
+	if(key_status[VK_MENU] == 0x80){ //VK_MENU = ALT KEY
 		if(code == VK_RETURN){
 			toggleWindowFullscreen();
 			return;
