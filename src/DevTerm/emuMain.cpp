@@ -31,6 +31,7 @@
 
 #include "../emu.h"
 
+
 EMU *emu;
 static int64_t start_ms;
 
@@ -121,6 +122,11 @@ int main(int argc,char *argv[]){
                 }
                 update_fps_time = current_time + 1000;
             }
+			if(update_status_bar_time <= current_time) {
+				emu->get_status_bar_updated();
+				update_status_bar_time = current_time + 200;
+			}
+        	
         	if(emu->is_exit() == true){
         		save_config(create_local_path(_T("%s.ini"), _T(CONFIG_NAME)));
 				delete emu;
@@ -133,3 +139,5 @@ int main(int argc,char *argv[]){
 	
 	return 0;	
 }
+
+

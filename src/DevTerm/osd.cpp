@@ -28,6 +28,26 @@ void OSD::initialize(int rate, int samples)
 	initialize_input();
 	initialize_screen();
 	initialize_sound(rate, samples);
+	
+		
+#ifdef USE_FLOPPY_DISK
+	fd_status = 0x80000000;
+#endif
+#ifdef USE_QUICK_DISK
+	qd_status = 0x80000000;
+#endif
+#ifdef USE_HARD_DISK
+	hd_status = 0x80000000;
+#endif
+#ifdef USE_COMPACT_DISC
+	cd_status = 0x80000000;
+#endif
+#ifdef USE_LASER_DISC
+	ld_status = 0x80000000;
+#endif
+#if defined(USE_TAPE) && !defined(TAPE_BINARY_ONLY)
+	_TCHAR tape_status[1024] = _T("uninitialized");
+#endif	
 }
 
 void OSD::release()

@@ -870,6 +870,7 @@ DWORD DLL_PREFIX MyGetPrivateProfileString(LPCTSTR lpAppName, LPCTSTR lpKeyName,
 	} else {
 		lpp[0] = '\0';
 	}
+	//printf("lpAppName=%s,lpKeyName=%s\n",lpAppName,lpKeyName);
 	FILEIO* fio = new FILEIO();
 	if(fio->Fopen(lpFileName, FILEIO_READ_ASCII)) {
 		bool in_section = false;
@@ -893,6 +894,7 @@ DWORD DLL_PREFIX MyGetPrivateProfileString(LPCTSTR lpAppName, LPCTSTR lpKeyName,
 				}
 			}
 		}
+		//printf("lpp=%s\n",lpp);
 		fio->Fclose();
 	}
 	delete fio;

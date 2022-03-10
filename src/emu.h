@@ -510,7 +510,10 @@ public:
 	void load_sound_file(int id, const _TCHAR *name, int16_t **data, int *dst_size);
 	void free_sound_file(int id, int16_t **data);
 #endif
-	
+
+	void get_status_bar_updated();
+	void switchPCG();
+
 	void request_exit();
 	bool is_exit();
 

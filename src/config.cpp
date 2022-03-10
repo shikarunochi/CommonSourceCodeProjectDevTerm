@@ -113,7 +113,8 @@ void initialize_config()
 	#else
 		config.sound_frequency = 6;	// 48KHz
 	#endif
-	config.sound_latency = 1;	// 100msec
+	//config.sound_latency = 1;	// 100msec
+	config.sound_latency = 0;	// 50msec
 	config.sound_strict_rendering = true;
 	#ifdef USE_FLOPPY_DISK
 		config.sound_noise_fdd = true;
@@ -200,7 +201,9 @@ void load_config(const _TCHAR* config_path)
 	#endif
 	#ifdef USE_PRINTER
 		config.printer_type = MyGetPrivateProfileInt(_T("Control"), _T("PrinterType"), config.printer_type, config_path);
+		printf("printerType=%d\n",config.printer_type);
 	#endif
+	
 	#ifdef USE_FLOPPY_DISK
 		for(int drv = 0; drv < USE_FLOPPY_DISK; drv++) {
 			config.correct_disk_timing[drv] = MyGetPrivateProfileBool(_T("Control"), create_string(_T("CorrectDiskTiming%d"), drv + 1), config.correct_disk_timing[drv], config_path);

@@ -326,39 +326,65 @@ void OSD::key_down_native(int code, bool repeat)
 			emu->request_exit();
 			return;
 		}
+		
+		#ifdef USE_FLOPPY_DISK
 		if(code == 0x31){ //1
-			selectFile(1);
+			SDL_PauseAudio(1);
+			selectFile(FLOPPY_DISK_1);
+			SDL_PauseAudio(0);
 			return;
 		}
 		if(code == 0x32){ //2
-			selectFile(2);
+			SDL_PauseAudio(1);
+			selectFile(FLOPPY_DISK_2);
+			SDL_PauseAudio(0);
 			return;
 		}
+		#endif
+		
+		#ifdef USE_TAPE 
 		if(code == 0x33){ //3
-			selectFile(3);
+			SDL_PauseAudio(1);
+			selectFile(CASETTE_TAPE);
+			SDL_PauseAudio(0);
 			return;
 		}
+		#endif
+
+		#ifdef USE_CART
 		if(code == 0x34){ //4
-			selectFile(4);
+			SDL_PauseAudio(1);
+			selectFile(CARTRIDGE);
+			SDL_PauseAudio(0);
 			return;
 		}
+		#endif
+
+		#ifdef USE_QUICK_DISK
 		if(code == 0x35){ //5
-			selectFile(5);
+			SDL_PauseAudio(1);
+			selectFile(QUICK_DISK);
+			SDL_PauseAudio(0);
 			return;
 		}
+		#endif
+		
 		if(code == 0x52){ //R
 			vm->reset();
 			return;
 		}
 		if(code == 0x46){ //F
+			SDL_PauseAudio(1);
 			fileSelectDialog();
+			SDL_PauseAudio(0);
 			return;
 		}
-	//	if(code == 0x50){ //P
-	//		vm->push_play(0);
-	//		printf("PushPlay\n");
-	//		return;
-	//	}
+		
+		if(code == 0x50){ //P
+			EMU* emu = vm->getEmu();
+			emu->switchPCG();
+			return;
+		}
 	}
 	
 	key_status[code] = 0x80;
@@ -413,7 +439,7 @@ unsigned int OSD::getFuncVmKeyCode(int keyCode){
 	}
 	return 0;
 }
-	
+
 
 #ifdef USE_MOUSE
 void OSD::enable_mouse()

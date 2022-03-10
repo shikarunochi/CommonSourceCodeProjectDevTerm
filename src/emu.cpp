@@ -64,7 +64,8 @@ EMU::EMU()
 		config.sound_frequency = 6;	// default: 48KHz
 	}
 	if(!(0 <= config.sound_latency && config.sound_latency < 5)) {
-		config.sound_latency = 1;	// default: 100msec
+		//config.sound_latency = 1;	// default: 100msec
+		config.sound_latency = 0;	// default: 50msec
 	}
 	sound_frequency = config.sound_frequency;
 	sound_latency = config.sound_latency;
@@ -3095,6 +3096,21 @@ bool EMU::load_state_tmp(const _TCHAR* file_path)
 	
 #endif
 
+void EMU::get_status_bar_updated(){
+	osd->get_status_bar_updated();
+}
+		
+void EMU::switchPCG() {
+
+#if defined(_MZ80K) || defined(_MZ1200) || defined(_MZ700)
+    config.dipswitch = config.dipswitch ^ 1;
+#endif
+#if defined(SUPPORT_PC88_PCG8100)
+    config.dipswitch = config.dipswitch ^ (1 << 3);
+#endif
+
+}
+	
 void EMU::request_exit(){
 	exit_flag = true;
 }

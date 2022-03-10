@@ -25,7 +25,7 @@
 #include <SDL.h>
 
 #include "osd.h"
-
+#include "../emu.h"
 #define REC_VIDEO_SUCCESS	1
 #define REC_VIDEO_FULL		2
 #define REC_VIDEO_ERROR		3
@@ -137,6 +137,8 @@ int OSD::draw_screen()
 	draw_screen_buffer = &vm_screen_buffer;
 	scrntype_t* lpBmp =  draw_screen_buffer->lpBmp;
 
+	
+//Media Status Update
 #ifdef USE_TAPE
 	if(vm->is_tape_playing(0)){
 		int tapePosition = vm->get_tape_position(0);
@@ -145,17 +147,53 @@ int OSD::draw_screen()
 			for(int x = 0;x < vm_window_width * sizeof (scrntype_t);x++){
 				if(x * 100 / vm_window_width * sizeof (scrntype_t) < tapePosition){
 					*(screenBuffer + x) = 0x11FF11;
+				}else{
+					break;
 				}
 			}
 		}
 	}
 #endif	
+	
+	
 	SDL_UpdateTexture(sdlTexture, NULL, lpBmp, vm_screen_width * sizeof (scrntype_t));
 	SDL_RenderClear(sdlRenderer);
     SDL_RenderCopyEx(sdlRenderer, sdlTexture, NULL, NULL,0,0,SDL_FLIP_VERTICAL);
+
+#if defined(USE_FLOPPY_DISK) || defined(USE_QUICK_DISK) || defined(USE_HARD_DISK) || defined(USE_COMPACT_DISC) || defined(USE_LASER_DISC)
+	SDL_SetRenderDrawColor(sdlRenderer, 0, 255, 0, 255);
+#ifdef USE_FLOPPY_DISK
+	SDL_Rect rectangle;
+	rectangle.w = 5;
+	rectangle.h = 5;
+
+	for(int i = 0; i < USE_FLOPPY_DISK; i++) {
+		scrntype_t* screenBuffer = get_vm_screen_buffer(vm_window_height);
+		int idx = (fd_status >> i) & 1;
+		if(idx == 1){
+			rectangle.x = 10 * i + 2;
+			rectangle.y = vm_window_height - 7;
+			SDL_RenderFillRect(sdlRenderer, &rectangle);
+		}
+	}
+#endif	
+
+#ifdef USE_QUICK_DISK	
+	for(int i = 0; i < USE_QUICK_DISK; i++) {
+		scrntype_t* screenBuffer = get_vm_screen_buffer(vm_window_height);
+		int idx = (qd_status >> i) & 1;
+		if(idx == 1){
+			rectangle.x = 10 * i + 2;
+			rectangle.y = vm_window_height - 7;
+			SDL_RenderFillRect(sdlRenderer, &rectangle);
+		}
+	}
+#endif
+	SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 0);
+#endif
+	
     SDL_RenderPresent(sdlRenderer);
 
-	
 	//const char *text ="8x8 Primitive Font Test";
 	//stringColor(sdlWindow, 50, 50, text, 0xff0000ff);
 	//SDL_Flip(sdlWindow);
@@ -624,4 +662,61 @@ void OSD::toggleWindowFullscreen() {
 		SDL_SetWindowFullscreen(sdlWindow, 0);
 	}
 	fullScreen = !fullScreen;
+}
+
+
+bool OSD::get_status_bar_updated()
+{
+	EMU* emu = vm->getEmu();
+	bool updated = false;
+#ifdef USE_FLOPPY_DISK
+	uint32_t new_fd_status = emu->is_floppy_disk_accessed();
+	if(fd_status != new_fd_status) {
+		updated = true;
+		fd_status = new_fd_status;
+	}
+#endif
+#ifdef USE_QUICK_DISK
+	uint32_t new_qd_status = emu->is_quick_disk_accessed();
+	if(qd_status != new_qd_status) {
+		updated = true;
+		qd_status = new_qd_status;
+	}
+#endif
+#ifdef USE_HARD_DISK
+	uint32_t new_hd_status = emu->is_hard_disk_accessed();
+	if(hd_status != new_hd_status) {
+		updated = true;
+		hd_status = new_hd_status;
+	}
+#endif
+#ifdef USE_COMPACT_DISC
+	uint32_t new_cd_status = emu->is_compact_disc_accessed();
+	if(cd_status != new_cd_status) {
+		updated = true;
+		cd_status = new_cd_status;
+	}
+#endif
+#ifdef USE_LASER_DISC
+	uint32_t new_ld_status = emu->is_laser_disc_accessed();
+	if(ld_status != new_ld_status) {
+		updated = true;
+		ld_status = new_ld_status;
+	}
+#endif
+#if defined(USE_TAPE) && !defined(TAPE_BINARY_ONLY)
+	_TCHAR new_tape_status[array_length(tape_status)] = {0};
+	for(int drv = 0; drv < USE_TAPE; drv++) {
+		const _TCHAR* message = emu->get_tape_message(drv);
+		if(message != NULL) {
+			my_tcscpy_s(new_tape_status, array_length(new_tape_status), message);
+			break;
+		}
+	}
+	if(_tcsicmp(tape_status, new_tape_status) != 0) {
+		updated = true;
+		my_tcscpy_s(tape_status, array_length(tape_status), new_tape_status);
+	}
+#endif
+	return updated;
 }

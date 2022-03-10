@@ -1,0 +1,16 @@
+ CDEBUGFLAGS+=-D_PC8201
+ UOBJS+= vm/datarec.o \
+	vm/event.o \
+	vm/i8080.o \
+	vm/i8155.o \
+	vm/io.o \
+	vm/noise.o \
+	vm/pc8201/cmt.o \
+	vm/pc8201/keyboard.o \
+	vm/pc8201/lcd.o \
+	vm/pc8201/memory.o \
+	vm/pc8201/pc8201.o \
+	vm/pcm1bit.o \
+	vm/upd1990a.o 
+
+TARGET_NAME= emuPC8201

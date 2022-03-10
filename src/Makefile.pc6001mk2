@@ -1,0 +1,28 @@
+ CDEBUGFLAGS+=-D_PC6001MK2 
+ UOBJS+= 		vm/ay_3_891x.o \
+		vm/datarec.o \
+		vm/disk.o \
+		vm/event.o \
+		vm/fmgen/fmgen.o \
+		vm/fmgen/fmtimer.o \
+		vm/fmgen/opna.o \
+		vm/fmgen/psg.o \
+		vm/i8255.o \
+		vm/io.o \
+		vm/mcs48.o \
+		vm/noise.o \
+		vm/pc6001/joystick.o \
+		vm/pc6001/memory.o \
+		vm/pc6001/memory_draw.o \
+		vm/pc6001/pc6001.o \
+		vm/pc6001/psub.o \
+		vm/pc6001/sub.o \
+		vm/pc6001/timer.o \
+		vm/pc6031.o \
+		vm/pc80s31k.o \
+		vm/prnfile.o \
+		vm/upd765a.o \
+		vm/upd7752.o \
+		vm/z80.o 
+
+TARGET_NAME= emuPC6001mk2

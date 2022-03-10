@@ -18,15 +18,15 @@
 void OSD::selectFile(int selectType){
 	char caption[128];
 	switch(selectType){
-	case 1:
+	case FLOPPY_DISK_1:
 		sprintf(caption,"Select DISK[1] Image File");break;
-	case 2:
+	case FLOPPY_DISK_2:
 		sprintf(caption,"Select DISK[2] Image File");break;
-	case 3:
+	case CASETTE_TAPE:
 		sprintf(caption,"Select TAPE Image File");break;
-	case 4:
+	case CARTRIDGE:
 		sprintf(caption,"Select CARTRIDGE Image File");break;
-	case 5:
+	case QUICK_DISK:
 		sprintf(caption,"Select QuickDisk Image File");break;
 	default:
 		return;
@@ -75,11 +75,11 @@ void OSD::selectFile(int selectType){
 	if(filename != NULL){
         printf("Select: %s\n",filename);
 		switch(selectType){
-		case 1:
+		case FLOPPY_DISK_1:
 			vm->open_floppy_disk(0, filename ,0);break;
-		case 2:
+		case FLOPPY_DISK_2:
 			vm->open_floppy_disk(1, filename ,0);break;
-		case 3:
+		case CASETTE_TAPE:
             if (vm->is_tape_inserted(0)) {
             	vm->push_stop(0);
                 vm->close_tape(0);
@@ -89,10 +89,10 @@ void OSD::selectFile(int selectType){
     			vm->play_tape(0, filename);
             }
 			break;
-		case 4:
+		case CARTRIDGE:
 			vm->open_cart(0, filename);
 			break;
-		case 5:
+		case QUICK_DISK:
 			vm->open_quick_disk(0, filename);
 		}
 		g_free (filename);	
@@ -111,26 +111,26 @@ void OSD::fileSelectDialog(){
 	#ifdef USE_FLOPPY_DISK
 	gtk_dialog_add_button (GTK_DIALOG(dialog),
                        "DISK 1",
-                       1);
+                       FLOPPY_DISK_1);
 
 	gtk_dialog_add_button (GTK_DIALOG(dialog),
                        "DISK 2",
-                       2);
+                       FLOPPY_DISK_2);
 	#endif
 	#ifdef USE_TAPE 
 	gtk_dialog_add_button (GTK_DIALOG(dialog),
                        "TAPE",
-                       3);
+                       CASETTE_TAPE);
 	#endif
 	#ifdef USE_CART
 	gtk_dialog_add_button (GTK_DIALOG(dialog),
                        "CARTRIDGE",
-                       4);
+                       CARTRIDGE);
 	#endif
 	#ifdef USE_QUICK_DISK
 	gtk_dialog_add_button (GTK_DIALOG(dialog),
                        "QD",
-                       5);
+                       QUICK_DISK);
 	#endif
 	gint res = gtk_dialog_run(GTK_DIALOG(dialog));
 	printf("dialog result:%d\n",res);
@@ -141,7 +141,7 @@ void OSD::fileSelectDialog(){
         gtk_main_iteration ();
 	}
 	
-	if(res > 1){
+	if(res > 0){
 		selectFile(res);
 	}
 	
