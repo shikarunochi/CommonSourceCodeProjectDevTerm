@@ -72,9 +72,11 @@ void OSD::initialize_input()
 
 void OSD::release_input()
 {
+#ifdef USE_JOYSTICK
    if (SDL_JoystickGetAttached(joy)) {
         SDL_JoystickClose(joy);
     }
+#endif
 }
 
 void OSD::update_input()
