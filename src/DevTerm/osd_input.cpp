@@ -294,26 +294,23 @@ void OSD::key_up(int code, bool extended)
 
 void OSD::key_down_native(int code, bool repeat)
 {
-	//LOGI("keyDown: %d", code);
 
 	uint8_t prev_shift = key_status[VK_SHIFT];
 	uint8_t prev_control = key_status[VK_CONTROL];
 	uint8_t prev_menu = key_status[VK_MENU];
 
-	key_status[VK_SHIFT] = key_status[VK_LSHIFT] | key_status[VK_RSHIFT];
-	key_status[VK_CONTROL] = key_status[VK_LCONTROL] | key_status[VK_RCONTROL];
-	key_status[VK_MENU] = key_status[VK_LMENU] | key_status[VK_RMENU];
-
 	if(code == VK_LSHIFT || code == VK_RSHIFT) {
-		if(prev_shift == 0 && key_status[VK_SHIFT] != 0) {
+		if(prev_shift == 0) {
 			vm->key_down(VK_SHIFT, repeat);
 		}
 	} else if(code == VK_LCONTROL|| code == VK_RCONTROL) {
-		if(prev_control == 0 && key_status[VK_CONTROL] != 0) {
+		if(prev_control == 0) {
+			key_status[code] = 0x80;
 			vm->key_down(VK_CONTROL, repeat);
 		}
 	} else if(code == VK_LMENU|| code == VK_RMENU) {
-		if(prev_menu == 0 && key_status[VK_MENU] != 0) {
+		if(prev_menu == 0) {
+			key_status[code] = 0x80;
 			vm->key_down(VK_MENU, repeat);
 		}
 	}
@@ -390,12 +387,16 @@ void OSD::key_down_native(int code, bool repeat)
 	}
 	
 	key_status[code] = 0x80;
+    key_status[VK_SHIFT] = key_status[VK_LSHIFT] | key_status[VK_RSHIFT];
+	key_status[VK_CONTROL] = key_status[VK_LCONTROL] | key_status[VK_RCONTROL];
+	key_status[VK_MENU] = key_status[VK_LMENU] | key_status[VK_RMENU];
+	
 	vm->key_down(code, repeat);
+
 }
 
 void OSD::key_up_native(int code)
 {
-	//LOGI("keyUp: %d", code);
 	if(key_status[code] == 0) {
 		return;
 	}
@@ -413,15 +414,15 @@ void OSD::key_up_native(int code)
 	key_status[VK_MENU] = key_status[VK_LMENU] | key_status[VK_RMENU];
 
 	if(code == VK_LSHIFT || code == VK_RSHIFT) {
-		if(prev_shift != 0 && key_status[VK_SHIFT] == 0) {
+		if(prev_shift != 0 ) {
 			vm->key_up(VK_SHIFT);
 		}
 	} else if(code == VK_LCONTROL|| code == VK_RCONTROL) {
-		if(prev_control != 0 && key_status[VK_CONTROL] == 0) {
+		if(prev_control != 0) {
 			vm->key_up(VK_CONTROL);
 		}
 	} else if(code == VK_LMENU || code == VK_RMENU) {
-		if(prev_menu != 0 && key_status[VK_MENU] == 0) {
+		if(prev_menu != 0) {
 			vm->key_up(VK_MENU);
 		}
 	}
