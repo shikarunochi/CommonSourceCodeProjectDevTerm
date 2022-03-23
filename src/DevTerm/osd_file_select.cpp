@@ -24,10 +24,13 @@ void OSD::selectFile(int selectType){
 		sprintf(caption,"Select DISK[2] Image File");break;
 	case CASETTE_TAPE:
 		sprintf(caption,"Select TAPE Image File");break;
-	case CARTRIDGE:
+	case CARTRIDGE_1:
+	case CARTRIDGE_2:
 		sprintf(caption,"Select CARTRIDGE Image File");break;
 	case QUICK_DISK:
 		sprintf(caption,"Select QuickDisk Image File");break;
+	case BINARY_FILE:
+		sprintf(caption,"Select Binary Image File");break;
 	default:
 		return;
 	}
@@ -89,11 +92,17 @@ void OSD::selectFile(int selectType){
     			vm->play_tape(0, filename);
             }
 			break;
-		case CARTRIDGE:
+		case CARTRIDGE_1:
 			vm->open_cart(0, filename);
+			break;
+		case CARTRIDGE_2:
+			vm->open_cart(1, filename);
 			break;
 		case QUICK_DISK:
 			vm->open_quick_disk(0, filename);
+			break;
+		case BINARY_FILE:
+			vm->load_binary(0, filename);
 		}
 		g_free (filename);	
 	}
@@ -123,15 +132,31 @@ void OSD::fileSelectDialog(){
                        CASETTE_TAPE);
 	#endif
 	#ifdef USE_CART
-	gtk_dialog_add_button (GTK_DIALOG(dialog),
-                       "CARTRIDGE",
-                       CARTRIDGE);
+	if( USE_CART > 1){
+		gtk_dialog_add_button (GTK_DIALOG(dialog),
+	                       "CARTRIDGE 1",
+	                       CARTRIDGE_1);
+		gtk_dialog_add_button (GTK_DIALOG(dialog),
+	                       "CARTRIDGE 2",
+	                       CARTRIDGE_2);
+
+	}else{
+		gtk_dialog_add_button (GTK_DIALOG(dialog),
+	                       "CARTRIDGE",
+	                       CARTRIDGE_1);
+	}		
 	#endif
 	#ifdef USE_QUICK_DISK
 	gtk_dialog_add_button (GTK_DIALOG(dialog),
                        "QD",
                        QUICK_DISK);
 	#endif
+	#ifdef USE_BINARY_FILE
+	gtk_dialog_add_button (GTK_DIALOG(dialog),
+                       "BINARY",
+                       BINARY_FILE);
+	#endif
+
 	gint res = gtk_dialog_run(GTK_DIALOG(dialog));
 	printf("dialog result:%d\n",res);
 	

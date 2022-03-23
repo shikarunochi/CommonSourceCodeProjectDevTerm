@@ -51,8 +51,8 @@
 #endif
 
 #ifdef USE_SOCKET
-#include <winsock.h>
-#pragma comment(lib, "wsock32.lib")
+//#include <winsock.h>
+//#pragma comment(lib, "wsock32.lib")
 #endif
 
 #if defined(USE_MOVIE_PLAYER) || defined(USE_VIDEO_CAPTURE)
@@ -399,12 +399,12 @@ private:
 	void initialize_socket();
 	void release_socket();
 	
-	int soc[SOCKET_MAX];
-	bool is_tcp[SOCKET_MAX];
-	struct sockaddr_in udpaddr[SOCKET_MAX];
-	int socket_delay[SOCKET_MAX];
-	char recv_buffer[SOCKET_MAX][SOCKET_BUFFER_MAX];
-	int recv_r_ptr[SOCKET_MAX], recv_w_ptr[SOCKET_MAX];
+	//int soc[SOCKET_MAX];
+	//bool is_tcp[SOCKET_MAX];
+	//struct sockaddr_in udpaddr[SOCKET_MAX];
+	//int socket_delay[SOCKET_MAX];
+	//char recv_buffer[SOCKET_MAX][SOCKET_BUFFER_MAX];
+	//int recv_r_ptr[SOCKET_MAX], recv_w_ptr[SOCKET_MAX];
 #endif
 	
 	static char *fbptr;
@@ -641,7 +641,8 @@ public:
 #ifdef USE_SOCKET
 	int get_socket(int ch)
 	{
-		return soc[ch];
+		//return soc[ch];
+		return 0;
 	}
 	void notify_socket_connected(int ch);
 	void notify_socket_disconnected(int ch);
@@ -968,6 +969,6 @@ public:
 #define VK_OEM_CLEAR      0xFE
 
 
-enum FileSelectType { FILE_SELECT_NONE ,FLOPPY_DISK_1 ,FLOPPY_DISK_2 , CASETTE_TAPE , CARTRIDGE, QUICK_DISK, FILE_SELECT_TYPE_MAX};
+enum FileSelectType { FILE_SELECT_NONE ,FLOPPY_DISK_1 ,FLOPPY_DISK_2 , CASETTE_TAPE , CARTRIDGE_1, CARTRIDGE_2, QUICK_DISK, BINARY_FILE, FILE_SELECT_TYPE_MAX};
 
 #endif

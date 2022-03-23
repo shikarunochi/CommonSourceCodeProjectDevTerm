@@ -77,7 +77,7 @@ void PRNFILE::write_signal(int id, uint32_t data, uint32_t mask)
 				open_file();
 			}
 			//for DevTerm text only
-			if(value >= 0x10){
+			if(value >= 0x20){
 				fio->Fputc(value);
 			}else if(value == 0x0d || value == 0x0a){
 				fio->Fputc(0x0a);

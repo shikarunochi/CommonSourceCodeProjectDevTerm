@@ -1760,7 +1760,8 @@ void EMU::write_bitmap_to_file(bitmap_t *bitmap, const _TCHAR *file_path)
 // ----------------------------------------------------------------------------
 
 #ifdef USE_SOCKET
-SOCKET EMU::get_socket(int ch)
+//SOCKET EMU::get_socket(int ch)
+int EMU::get_socket(int ch)
 {
 	return osd->get_socket(ch);
 }

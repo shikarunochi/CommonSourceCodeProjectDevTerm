@@ -32,9 +32,10 @@
 #define SUB_SCRIPT	-1
 
 // dot impact printer mode
-#ifdef MZ1P17_DOT_PRINT
+//#ifdef MZ1P17_DOT_PRINT
+//use internal font
 	#define DOT_PRINT	1
-#endif
+//#endif
 #ifndef DOT_PRINT
 	#if defined(_MZ80K) || defined(_MZ1200) || defined(_MZ80A)
 		#define DOT_PRINT	1

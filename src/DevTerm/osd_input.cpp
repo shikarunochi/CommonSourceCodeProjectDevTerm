@@ -67,6 +67,11 @@ void OSD::initialize_input()
 #if defined(_MZ80K)||defined(_MZ1200)
 	DevTermKeyCode[0x60] = VK_OEM_3; //'→=
 #endif
+#if defined(_MZ2200) ||defined(_MZ80B) 
+	DevTermKeyCode[0x8] = VK_DELETE; //BS → DEL
+	DevTermKeyCode[0x1b] = VK_PAUSE; //ESC→PAUSE(=BREAK)
+#endif
+	
 	
 }
 
@@ -353,7 +358,7 @@ void OSD::key_down_native(int code, bool repeat)
 		#ifdef USE_CART
 		if(code == 0x34){ //4
 			SDL_PauseAudio(1);
-			selectFile(CARTRIDGE);
+			selectFile(CARTRIDGE_1);
 			SDL_PauseAudio(0);
 			return;
 		}
