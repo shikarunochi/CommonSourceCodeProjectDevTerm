@@ -1,0 +1,47 @@
+ CDEBUGFLAGS+=-D_MZ2500
+
+UOBJS+= vm/datarec.o \
+	vm/disk.o \
+	vm/event.o \
+	vm/fmgen/fmgen.o \
+	vm/fmgen/fmtimer.o \
+	vm/fmgen/opna.o \
+	vm/fmgen/psg.o \
+	vm/harddisk.o \
+	vm/i8253.o \
+	vm/i8255.o \
+	vm/io.o \
+	vm/mb8877.o \
+	vm/mz1p17.o \
+	vm/mz2500/calendar.o \
+	vm/mz2500/cmt.o \
+	vm/mz2500/crtc.o \
+	vm/mz2500/floppy.o \
+	vm/mz2500/interrupt.o \
+	vm/mz2500/joystick.o \
+	vm/mz2500/keyboard.o \
+	vm/mz2500/memory.o \
+	vm/mz2500/mouse.o \
+	vm/mz2500/mz1e26.o \
+	vm/mz2500/mz1e30.o \
+	vm/mz2500/mz1r13.o \
+	vm/mz2500/mz1r37.o \
+	vm/mz2500/mz2500.o \
+	vm/mz2500/printer.o \
+	vm/mz2500/serial.o \
+	vm/mz2500/timer.o \
+	vm/noise.o \
+	vm/pcm1bit.o \
+	vm/prnfile.o \
+	vm/rp5c01.o \
+	vm/scsi_dev.o \
+	vm/scsi_hdd.o \
+	vm/scsi_host.o \
+	vm/w3100a.o \
+	vm/ym2203.o \
+	vm/z80.o \
+	vm/z80pio.o \
+	vm/z80sio.o \
+	DevTerm/osd_socket.o
+
+TARGET_NAME= emuZ2500

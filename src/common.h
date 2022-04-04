@@ -4,6 +4,10 @@
 	Author : Takeda.Toshiya
 	Date   : 2006.08.18 -
 
+  	[for DevTerm]
+	Modify : @shikarunochi
+	Date   : 2022.04.04-
+	
 	[ common header ]
 */
 
@@ -23,6 +27,7 @@
 		#endif
 	#endif
 #endif
+
 
 // check environemnt/language
 #ifdef _WIN32
@@ -151,7 +156,9 @@
 	#include <sys/param.h>
 #endif
 #ifndef _MAX_PATH
-	#define _MAX_PATH 2048
+	//#define _MAX_PATH 2048
+	//State保存領域に使われるため、Windowsに合わせておく
+	#define _MAX_PATH 260
 #endif
 
 // endian
@@ -1097,5 +1104,15 @@ typedef struct symbol_s {
 const _TCHAR *DLL_PREFIX get_symbol(symbol_t *first_symbol, uint32_t addr);
 const _TCHAR *DLL_PREFIX get_value_or_symbol(symbol_t *first_symbol, const _TCHAR *format, uint32_t addr);
 const _TCHAR *DLL_PREFIX get_value_and_symbol(symbol_t *first_symbol, const _TCHAR *format, uint32_t addr);
+
+#ifndef MAX_PATH
+	#define MAX_PATH 2048
+#endif
+
+void convertUTF8fromSJIS(char *src,char *desc,int length);
+
+#if defined (_DEVTERM)
+#define USE_ZLIB
+#endif
 
 #endif

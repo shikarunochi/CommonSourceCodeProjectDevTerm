@@ -18,6 +18,7 @@
 	#include <string>
 	#include <algorithm>
 	#include <cctype>
+
 #endif
 #if defined(_USE_QT)
 	#include <string.h>
@@ -367,13 +368,12 @@ int DLL_PREFIX my_sprintf_s(char *buffer, size_t sizeOfBuffer, const char *forma
 
 int DLL_PREFIX my_swprintf_s(wchar_t *buffer, size_t sizeOfBuffer, const wchar_t *format, ...)
 {
-	return 0;
-	//shikarunochi
-	//va_list ap;
-	//va_start(ap, format);
-	//int result = vswprintf(buffer, format, ap);
-	//va_end(ap);
-	//return result;
+	va_list ap;
+	va_start(ap, format);
+	//add sizeOfBuffer :shikarunochi
+	int result = vswprintf(buffer,sizeOfBuffer,format, ap);
+	va_end(ap);
+	return result;
 }
 
 int DLL_PREFIX my_stprintf_s(_TCHAR *buffer, size_t sizeOfBuffer, const _TCHAR *format, ...)
@@ -1639,4 +1639,44 @@ const _TCHAR *DLL_PREFIX get_value_and_symbol(symbol_t *first_symbol, const _TCH
 		}
 	}
 	return name[output_index];
+}
+
+//変換対応してるのは半角カナだけです。
+void convertUTF8fromSJIS(char *src,char *dest,int length){
+    int srcIndex = 0;
+    int destIndex = 0;
+    while(src[srcIndex] != '\0'){
+        char srcData = src[srcIndex];
+        if(srcData < 127){
+            dest[destIndex++] = src[srcIndex++];
+        }else if(srcData >= 128 && srcData<= 160){
+            dest[destIndex++] = '*';
+            srcIndex++;
+        }else if(srcData >= 161 && srcData<= 223){
+            if(destIndex + 3 >= length){
+                break;
+            }
+            int kanaIndex;
+            uint16_t uft8StartIndex;
+            if(srcData <= 191){ //191ｿ
+                kanaIndex = srcData -161;
+                uft8StartIndex = 0xBDA1;
+            }else {
+                kanaIndex = srcData - (161 + 15 + 16);
+                uft8StartIndex = 0xBE80;
+            }
+            dest[destIndex++] = 0xEF;
+            int16_t kanaData = uft8StartIndex + kanaIndex;
+            dest[destIndex++] = kanaData >> 8;
+            dest[destIndex++] = kanaData & 0x00FF;
+            srcIndex++;
+        }else{
+            dest[destIndex++] = '*';
+            srcIndex++;
+        }
+        if(destIndex >= length){
+            break;
+        }
+    }
+	dest[destIndex] = '\0';
 }

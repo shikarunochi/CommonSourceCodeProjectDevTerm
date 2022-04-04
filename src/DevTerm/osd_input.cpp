@@ -63,16 +63,39 @@ void OSD::initialize_input()
 #if defined(_MZ700) || defined(_MZ80K)||defined(_MZ1200)|| defined(_MZ1500)
 	DevTermKeyCode[0x8] = VK_DELETE; //BS → DEL
 	DevTermKeyCode[0x1b] = VK_BACK; //ESC→BS(=BREAK)
-#endif
-#if defined(_MZ80K)||defined(_MZ1200)
 	DevTermKeyCode[0x60] = VK_OEM_3; //'→=
 #endif
+
 #if defined(_MZ2200) ||defined(_MZ80B) 
 	DevTermKeyCode[0x8] = VK_DELETE; //BS → DEL
 	DevTermKeyCode[0x1b] = VK_PAUSE; //ESC→PAUSE(=BREAK)
 #endif
 	
+#if defined(PC8001_VARIANT) || defined(PC8801_VARIANT)||defined(PC8801SR_VARIANT)
+	//F11 → KANA
+	int checkKeyCodeIndex = 0;
+	while(1){
+		if(DevTermFuncKeyCode[checkKeyCodeIndex][0] == SDLK_F11){
+			DevTermFuncKeyCode[checkKeyCodeIndex][1] = VK_KANA;
+			break;
+		}
+		checkKeyCodeIndex++;
+		if(DevTermFuncKeyCode[checkKeyCodeIndex][0] == 0){
+			break;
+		}
+	}
+#endif	
 	
+	printf("--------------------\n");
+	printf("Cmd + F: File Select\n");
+	printf("Cmd + S: Load/Save State\n");
+	printf("Cmd + R: Reset\n");
+	printf("Cmd + Enter: Toggle Screen Mode\n");
+#if defined(SUPPORT_PC88_PCG8100)|| defined(_MZ80K) || defined(_MZ1200) || defined(_MZ700)	
+	printf("Cmd + G: Toggle PCG\n");
+#endif
+	printf("Cmd + Q: Quit\n");
+	printf("--------------------\n");
 }
 
 void OSD::release_input()
@@ -320,7 +343,7 @@ void OSD::key_down_native(int code, bool repeat)
 		}
 	}
 	
-	if(key_status[VK_MENU] == 0x80){ //VK_MENU = ALT KEY
+	if(key_status[VK_APPS] == 0x80){  //VK_APPS = CMD KEY //VK_MENU = ALT KEY
 		if(code == VK_RETURN){
 			toggleWindowFullscreen();
 			return;
@@ -374,9 +397,25 @@ void OSD::key_down_native(int code, bool repeat)
 		#endif
 		
 		if(code == 0x52){ //R
+#if defined(PC8001_VARIANT) || defined(PC8801_VARIANT)||defined(PC8801SR_VARIANT)
+		int mode = selectBootModePC88();
+		if(mode >=0){
+			config.boot_mode = mode;
+			EMU* emu = vm->getEmu();
+    		if(emu) {
+		        emu->update_config();
+	    	}
+		}
+#endif
 			vm->reset();
 			return;
 		}
+
+		if(code == 0x53){ //S
+			stateFileListDialog();
+			return;
+		}
+
 		if(code == 0x46){ //F
 			SDL_PauseAudio(1);
 			fileSelectDialog();
@@ -384,11 +423,12 @@ void OSD::key_down_native(int code, bool repeat)
 			return;
 		}
 		
-		if(code == 0x50){ //P
+		if(code == 0x47){ //G
 			EMU* emu = vm->getEmu();
 			emu->switchPCG();
 			return;
 		}
+
 	}
 	
 	key_status[code] = 0x80;

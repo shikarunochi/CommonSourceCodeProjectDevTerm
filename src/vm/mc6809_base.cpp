@@ -5,6 +5,10 @@
 	Author : Takeda.Toshiya
 	Date   : 2011.05.06-
 
+  	[for Android] Delete USE_DEBUGGER
+	Modify : @shikarunochi
+	Date   : 2020.06.01-
+	
 	[ MC6809 ]
         Notes from K.Ohta <whatisthis.sowhat _at_ gmail.com> at Jan 16, 2015:
               All of undocumented instructions (i.e. ngc, flag16) of MC6809(not HD6309) are written by me.

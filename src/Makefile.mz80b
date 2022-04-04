@@ -1,0 +1,25 @@
+CDEBUGFLAGS+=-D_MZ80B
+UOBJS+= vm/datarec.o \
+	vm/disk.o \
+	vm/event.o \
+	vm/i8253.o \
+	vm/i8255.o \
+	vm/io.o \
+	vm/mb8877.o \
+	vm/mz1p17.o \
+	vm/mz2500/cmt.o \
+	vm/mz2500/floppy.o \
+	vm/mz2500/keyboard.o \
+	vm/mz2500/memory80b.o \
+	vm/mz2500/mz1r12.o \
+	vm/mz2500/mz1r13.o \
+	vm/mz2500/mz80b.o \
+	vm/mz2500/printer.o \
+	vm/mz2500/timer.o \
+	vm/noise.o \
+	vm/pcm1bit.o \
+	vm/prnfile.o \
+	vm/z80.o \
+	vm/z80pio.o
+
+TARGET_NAME= emuZ80B

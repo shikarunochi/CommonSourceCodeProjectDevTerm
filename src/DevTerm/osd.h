@@ -31,24 +31,25 @@
 #include "../config.h"
 #include "../vm/vm_template.h"
 #include <SDL.h>
+#include <gtk/gtk.h>
 //#include <SDL/SDL_gfxPrimitives.h>
 //#include <SDL/SDL_gfxPrimitives_font.h>
-#ifdef USE_ZLIB
+//#ifdef USE_ZLIB
 // relative path from *.vcproj/*.vcxproj, not from this directory :-(
-	#if defined(_MSC_VER) && (_MSC_VER >= 1800)
-		#ifdef _DEBUG
-			#pragma comment(lib, "../src/zlib-1.2.11/vc++2013/debug/zlibstat.lib")
-		#else
-			#pragma comment(lib, "../src/zlib-1.2.11/vc++2013/release/zlibstat.lib")
-		#endif
-	#else
-		#ifdef _DEBUG
-			#pragma comment(lib, "../src/zlib-1.2.11/vc++2008/debug/zlibstat.lib")
-		#else
-			#pragma comment(lib, "../src/zlib-1.2.11/vc++2008/release/zlibstat.lib")
-		#endif
-	#endif
-#endif
+//	#if defined(_MSC_VER) && (_MSC_VER >= 1800)
+//		#ifdef _DEBUG
+//			#pragma comment(lib, "../src/zlib-1.2.11/vc++2013/debug/zlibstat.lib")
+//		#else
+//			#pragma comment(lib, "../src/zlib-1.2.11/vc++2013/release/zlibstat.lib")
+//		#endif
+//	#else
+//		#ifdef _DEBUG
+//			#pragma comment(lib, "../src/zlib-1.2.11/vc++2008/debug/zlibstat.lib")
+//		#else
+//			#pragma comment(lib, "../src/zlib-1.2.11/vc++2008/release/zlibstat.lib")
+//		#endif
+//	#endif
+//#endif
 
 #ifdef USE_SOCKET
 //#include <winsock.h>
@@ -213,6 +214,7 @@ struct AudioPlayContext
     int data_len; // left data length
     bool is_exit; // is audio play buffer empty?
 };
+
 class FIFO;
 class FILEIO;
 
@@ -679,6 +681,14 @@ public:
 
 	bool get_status_bar_updated();
 
+	int selectBootModePC88();
+	int checkD88Bank(int drv, const _TCHAR *path, int bank);
+	int selectD88BankDialog(int drv);
+	void stateFileListDialog();
+	const _TCHAR *state_file_path(int num);
+	void save_state(int stateNo);
+	void load_state(int stateNo);
+
 	
 	//sound
 	void Close();
@@ -697,6 +707,9 @@ public:
 	//uint16_t soundBuffer[SOUND_BUFFER_LENGTH];
 	int soundBufferLength;
 	uint16_t *soundBuffer;
+	
+	GtkWidget * stateFileDialog;
+	int selectStateNo;
 };
 
 /*
@@ -970,5 +983,11 @@ public:
 
 
 enum FileSelectType { FILE_SELECT_NONE ,FLOPPY_DISK_1 ,FLOPPY_DISK_2 , CASETTE_TAPE , CARTRIDGE_1, CARTRIDGE_2, QUICK_DISK, BINARY_FILE, FILE_SELECT_TYPE_MAX};
+
+struct SaveStatusDialogInfo 
+{
+    OSD *osd;
+    int selectNo;
+};
 
 #endif

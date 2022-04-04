@@ -34,12 +34,16 @@
 	#if defined(USE_QT)
 		#include <zlib.h>
 		#include <zconf.h>
+	#elif defined (_DEVTERM)
+		#include <zlib.h>
+		#include <zconf.h>
 	#else
 		#ifdef _WIN32
 			#define ZLIB_WINAPI
 		#endif
 		#include "zlib-1.2.11/zlib.h"
 		#include "zlib-1.2.11/zconf.h"
+	
 	#endif
 	#if defined(ZLIB_VERNUM) && (ZLIB_VERNUM < 0x1290)
 		inline size_t gzfread(void *buffer, size_t size, size_t count, gzFile file)

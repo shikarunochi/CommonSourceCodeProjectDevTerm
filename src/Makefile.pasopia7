@@ -1,0 +1,29 @@
+CDEBUGFLAGS+=-D_PASOPIA7
+UOBJS+=vm/datarec.o \
+	vm/disk.o \
+	vm/event.o \
+	vm/hd46505.o \
+	vm/i8255.o \
+	vm/io.o \
+	vm/ls393.o \
+	vm/noise.o \
+	vm/not.o \
+	vm/pasopia7/display.o \
+	vm/pasopia7/floppy.o \
+	vm/pasopia7/iobus.o \
+	vm/pasopia7/iotrap.o \
+	vm/pasopia7/joypac2.o \
+	vm/pasopia7/kanjipac2.o \
+	vm/pasopia7/keyboard.o \
+	vm/pasopia7/memory.o \
+	vm/pasopia7/pac2.o \
+	vm/pasopia7/pasopia7.o \
+	vm/pasopia7/rampac2.o \
+	vm/pcm1bit.o \
+	vm/sn76489an.o \
+	vm/upd765a.o \
+	vm/z80.o \
+	vm/z80ctc.o \
+	vm/z80pio.o 
+
+TARGET_NAME= emuPasopia7

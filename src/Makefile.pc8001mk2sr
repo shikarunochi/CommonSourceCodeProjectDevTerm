@@ -1,0 +1,24 @@
+CDEBUGFLAGS+=-D_PC8001SR
+UOBJS+=vm/ay_3_891x.o \
+	vm/disk.o \
+	vm/event.o \
+	vm/fmgen/fmgen.o \
+	vm/fmgen/fmtimer.o \
+	vm/fmgen/opna.o \
+	vm/fmgen/psg.o \
+	vm/i8251.o \
+	vm/i8253.o \
+	vm/i8255.o \
+	vm/noise.o \
+	vm/pc80s31k.o \
+	vm/pc8801/diskio.o \
+	vm/pc8801/pc88.o \
+	vm/pc8801/pc8801.o \
+	vm/pcm1bit.o \
+	vm/prnfile.o \
+	vm/upd1990a.o \
+	vm/upd765a.o \
+	vm/ym2203.o \
+	vm/z80.o 
+
+TARGET_NAME= emuPC8001mk2SR

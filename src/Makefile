@@ -55,7 +55,7 @@ else
 	MOPT=
 endif
 
-LDLIBS = -lm
+LDLIBS = -lm -lz
 
 GTK_LIB = `pkg-config --libs gtk+-3.0`
 GTK_INCLUDE= `pkg-config --cflags gtk+-3.0`
@@ -71,7 +71,8 @@ UOBJS = DevTerm/emuMain.o \
         DevTerm/osd_input.o \
         DevTerm/osd_screen.o \
         DevTerm/osd_sound.o \
-        DevTerm/osd_file_select.o
+        DevTerm/osd_file_select.o \
+        DevTerm/osd_dialog.o
 
 ifdef machine
   include Makefile.$(machine)

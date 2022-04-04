@@ -1,0 +1,12 @@
+CDEBUGFLAGS+=-D_JR100
+UOBJS+= vm/datarec.o \
+	vm/event.o \
+	vm/jr100/jr100.o \
+	vm/jr100/memory.o \
+	vm/mc6800.o \
+	vm/noise.o \
+	vm/not.o \
+	vm/pcm1bit.o \
+	vm/sy6522.o 
+
+TARGET_NAME= emuJR100

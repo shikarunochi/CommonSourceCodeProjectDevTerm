@@ -1,0 +1,22 @@
+CDEBUGFLAGS+=-D_MZ1200
+UOBJS+= vm/and.o \
+	vm/datarec.o \
+	vm/disk.o \
+	vm/event.o \
+	vm/i8253.o \
+	vm/i8255.o \
+	vm/io.o \
+	vm/ls393.o \
+	vm/mz1p17.o \
+	vm/mz80k/keyboard.o \
+	vm/mz80k/memory.o \
+	vm/mz80k/mz80fio.o \
+	vm/mz80k/mz80k.o \
+	vm/mz80k/printer.o \
+	vm/noise.o \
+	vm/pcm1bit.o \
+	vm/prnfile.o \
+	vm/t3444a.o \
+	vm/z80.o 
+
+TARGET_NAME= emuZ1200

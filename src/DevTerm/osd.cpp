@@ -46,7 +46,7 @@ void OSD::initialize(int rate, int samples)
 	ld_status = 0x80000000;
 #endif
 #if defined(USE_TAPE) && !defined(TAPE_BINARY_ONLY)
-	_TCHAR tape_status[1024] = _T("uninitialized");
+	my_tcscpy_s(tape_status, array_length(tape_status), _T("uninitialized"));
 #endif	
 }
 

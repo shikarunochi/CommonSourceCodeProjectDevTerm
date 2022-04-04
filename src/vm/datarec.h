@@ -4,6 +4,10 @@
 	Author : Takeda.Toshiya
 	Date   : 2006.08.18 -
 
+  	[for DevTerm]
+	Modify : @shikarunochi
+	Date   : 2022.02.01-
+
 	[ data recorder ]
 */
 
