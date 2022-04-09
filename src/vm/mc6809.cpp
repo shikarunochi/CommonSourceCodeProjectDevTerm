@@ -5,9 +5,9 @@
 	Author : Takeda.Toshiya
 	Date   : 2011.05.06-
 
-  	[for Android] Delete USE_DEBUGGER
+  	[for DevTerm] Delete USE_DEBUGGER,DIR->DIR_
 	Modify : @shikarunochi
-	Date   : 2020.06.01-
+	Date   : 2022.04.08-
 
 	[ MC6809 ]
         Notes from K.Ohta <whatisthis.sowhat _at_ gmail.com> at Jan 16, 2015:
@@ -196,7 +196,7 @@ struct opcodeinfo
 enum m6809_addressing_modes
 {
 	INH,                // Inherent
-	DIR,                // Direct
+	DIR_,                // Direct
 	IND,                // Indexed
 	REL,                // Relative (8 bit)
 	LREL,               // Long relative (16 bit)
@@ -210,22 +210,22 @@ enum m6809_addressing_modes
 // Page 0 opcodes (single byte)
 static const opcodeinfo m6809_pg0opcodes[] =
 {
-	{ 0x00, 2, _T("NEG"),   DIR    },
-	{ 0x01, 2, _T("NEG"),   DIR    },
-	{ 0x02, 2, _T("NGC"),   DIR    },
-	{ 0x03, 2, _T("COM"),   DIR    },
-	{ 0x04, 2, _T("LSR"),   DIR    },
-	{ 0x05, 2, _T("LSR"),   DIR    },
-	{ 0x06, 2, _T("ROR"),   DIR    },
-	{ 0x07, 2, _T("ASR"),   DIR    },
-	{ 0x08, 2, _T("ASL"),   DIR    },
-	{ 0x09, 2, _T("ROL"),   DIR    },
-	{ 0x0A, 2, _T("DEC"),   DIR    },
-	{ 0x0B, 2, _T("DCC"),   DIR    },
-	{ 0x0C, 2, _T("INC"),   DIR    },
-	{ 0x0D, 2, _T("TST"),   DIR    },
-	{ 0x0E, 2, _T("JMP"),   DIR    },
-	{ 0x0F, 2, _T("CLR"),   DIR    },
+	{ 0x00, 2, _T("NEG"),   DIR_    },
+	{ 0x01, 2, _T("NEG"),   DIR_    },
+	{ 0x02, 2, _T("NGC"),   DIR_    },
+	{ 0x03, 2, _T("COM"),   DIR_    },
+	{ 0x04, 2, _T("LSR"),   DIR_    },
+	{ 0x05, 2, _T("LSR"),   DIR_    },
+	{ 0x06, 2, _T("ROR"),   DIR_    },
+	{ 0x07, 2, _T("ASR"),   DIR_    },
+	{ 0x08, 2, _T("ASL"),   DIR_    },
+	{ 0x09, 2, _T("ROL"),   DIR_    },
+	{ 0x0A, 2, _T("DEC"),   DIR_    },
+	{ 0x0B, 2, _T("DCC"),   DIR_    },
+	{ 0x0C, 2, _T("INC"),   DIR_    },
+	{ 0x0D, 2, _T("TST"),   DIR_    },
+	{ 0x0E, 2, _T("JMP"),   DIR_    },
+	{ 0x0F, 2, _T("CLR"),   DIR_    },
 
 	{ 0x10, 1, _T("page1"), PG1    },
 	{ 0x11, 1, _T("page2"), PG2    },
@@ -362,22 +362,22 @@ static const opcodeinfo m6809_pg0opcodes[] =
 	{ 0x8E, 3, _T("LDX"),   IMM    },
 	{ 0x8F, 3, _T("FLAG"),  IMM    },
 
-	{ 0x90, 2, _T("SUBA"),  DIR    },
-	{ 0x91, 2, _T("CMPA"),  DIR    },
-	{ 0x92, 2, _T("SBCA"),  DIR    },
-	{ 0x93, 2, _T("SUBD"),  DIR    },
-	{ 0x94, 2, _T("ANDA"),  DIR    },
-	{ 0x95, 2, _T("BITA"),  DIR    },
-	{ 0x96, 2, _T("LDA"),   DIR    },
-	{ 0x97, 2, _T("STA"),   DIR    },
-	{ 0x98, 2, _T("EORA"),  DIR    },
-	{ 0x99, 2, _T("ADCA"),  DIR    },
-	{ 0x9A, 2, _T("ORA"),   DIR    },
-	{ 0x9B, 2, _T("ADDA"),  DIR    },
-	{ 0x9C, 2, _T("CMPX"),  DIR    },
-	{ 0x9D, 2, _T("JSR"),   DIR    },
-	{ 0x9E, 2, _T("LDX"),   DIR    },
-	{ 0x9F, 2, _T("STX"),   DIR    },
+	{ 0x90, 2, _T("SUBA"),  DIR_    },
+	{ 0x91, 2, _T("CMPA"),  DIR_    },
+	{ 0x92, 2, _T("SBCA"),  DIR_    },
+	{ 0x93, 2, _T("SUBD"),  DIR_    },
+	{ 0x94, 2, _T("ANDA"),  DIR_    },
+	{ 0x95, 2, _T("BITA"),  DIR_    },
+	{ 0x96, 2, _T("LDA"),   DIR_    },
+	{ 0x97, 2, _T("STA"),   DIR_    },
+	{ 0x98, 2, _T("EORA"),  DIR_    },
+	{ 0x99, 2, _T("ADCA"),  DIR_    },
+	{ 0x9A, 2, _T("ORA"),   DIR_    },
+	{ 0x9B, 2, _T("ADDA"),  DIR_    },
+	{ 0x9C, 2, _T("CMPX"),  DIR_    },
+	{ 0x9D, 2, _T("JSR"),   DIR_    },
+	{ 0x9E, 2, _T("LDX"),   DIR_    },
+	{ 0x9F, 2, _T("STX"),   DIR_    },
 
 	{ 0xA0, 2, _T("SUBA"),  IND    },
 	{ 0xA1, 2, _T("CMPA"),  IND    },
@@ -430,22 +430,22 @@ static const opcodeinfo m6809_pg0opcodes[] =
 	{ 0xCE, 3, _T("LDU"),   IMM    },
 	{ 0xCF, 3, _T("FLAG"),  IMM    },
 
-	{ 0xD0, 2, _T("SUBB"),  DIR    },
-	{ 0xD1, 2, _T("CMPB"),  DIR    },
-	{ 0xD2, 2, _T("SBCB"),  DIR    },
-	{ 0xD3, 2, _T("ADDD"),  DIR    },
-	{ 0xD4, 2, _T("ANDB"),  DIR    },
-	{ 0xD5, 2, _T("BITB"),  DIR    },
-	{ 0xD6, 2, _T("LDB"),   DIR    },
-	{ 0xD7, 2, _T("STB"),   DIR    },
-	{ 0xD8, 2, _T("EORB"),  DIR    },
-	{ 0xD9, 2, _T("ADCB"),  DIR    },
-	{ 0xDA, 2, _T("ORB"),   DIR    },
-	{ 0xDB, 2, _T("ADDB"),  DIR    },
-	{ 0xDC, 2, _T("LDD"),   DIR    },
-	{ 0xDD, 2, _T("STD"),   DIR    },
-	{ 0xDE, 2, _T("LDU"),   DIR    },
-	{ 0xDF, 2, _T("STU"),   DIR    },
+	{ 0xD0, 2, _T("SUBB"),  DIR_    },
+	{ 0xD1, 2, _T("CMPB"),  DIR_    },
+	{ 0xD2, 2, _T("SBCB"),  DIR_    },
+	{ 0xD3, 2, _T("ADDD"),  DIR_    },
+	{ 0xD4, 2, _T("ANDB"),  DIR_    },
+	{ 0xD5, 2, _T("BITB"),  DIR_    },
+	{ 0xD6, 2, _T("LDB"),   DIR_    },
+	{ 0xD7, 2, _T("STB"),   DIR_    },
+	{ 0xD8, 2, _T("EORB"),  DIR_    },
+	{ 0xD9, 2, _T("ADCB"),  DIR_    },
+	{ 0xDA, 2, _T("ORB"),   DIR_    },
+	{ 0xDB, 2, _T("ADDB"),  DIR_    },
+	{ 0xDC, 2, _T("LDD"),   DIR_    },
+	{ 0xDD, 2, _T("STD"),   DIR_    },
+	{ 0xDE, 2, _T("LDU"),   DIR_    },
+	{ 0xDF, 2, _T("STU"),   DIR_    },
 
 	{ 0xE0, 2, _T("SUBB"),  IND    },
 	{ 0xE1, 2, _T("CMPB"),  IND    },
@@ -506,10 +506,10 @@ static const opcodeinfo m6809_pg1opcodes[] =
 	{ 0x8C, 4, _T("CMPY"),  IMM    },
 	{ 0x8D, 4, _T("LBSR"),  LREL   },
 	{ 0x8E, 4, _T("LDY"),   IMM    },
-	{ 0x93, 3, _T("CMPD"),  DIR    },
-	{ 0x9C, 3, _T("CMPY"),  DIR    },
-	{ 0x9E, 3, _T("LDY"),   DIR    },
-	{ 0x9F, 3, _T("STY"),   DIR    },
+	{ 0x93, 3, _T("CMPD"),  DIR_    },
+	{ 0x9C, 3, _T("CMPY"),  DIR_    },
+	{ 0x9E, 3, _T("LDY"),   DIR_    },
+	{ 0x9F, 3, _T("STY"),   DIR_    },
 	{ 0xA3, 3, _T("CMPD"),  IND    },
 	{ 0xAC, 3, _T("CMPY"),  IND    },
 	{ 0xAE, 3, _T("LDY"),   IND    },
@@ -519,8 +519,8 @@ static const opcodeinfo m6809_pg1opcodes[] =
 	{ 0xBE, 4, _T("LDY"),   EXT    },
 	{ 0xBF, 4, _T("STY"),   EXT    },
 	{ 0xCE, 4, _T("LDS"),   IMM    },
-	{ 0xDE, 3, _T("LDS"),   DIR    },
-	{ 0xDF, 3, _T("STS"),   DIR    },
+	{ 0xDE, 3, _T("LDS"),   DIR_    },
+	{ 0xDF, 3, _T("STS"),   DIR_    },
 	{ 0xEE, 3, _T("LDS"),   IND    },
 	{ 0xEF, 3, _T("STS"),   IND    },
 	{ 0xFE, 4, _T("LDS"),   EXT    },
@@ -533,8 +533,8 @@ static const opcodeinfo m6809_pg2opcodes[] =
 	{ 0x3F, 2, _T("SWI3"),  INH    },
 	{ 0x83, 4, _T("CMPU"),  IMM    },
 	{ 0x8C, 4, _T("CMPS"),  IMM    },
-	{ 0x93, 3, _T("CMPU"),  DIR    },
-	{ 0x9C, 3, _T("CMPS"),  DIR    },
+	{ 0x93, 3, _T("CMPU"),  DIR_    },
+	{ 0x9C, 3, _T("CMPS"),  DIR_    },
 	{ 0xA3, 3, _T("CMPU"),  IND    },
 	{ 0xAC, 3, _T("CMPS"),  IND    },
 	{ 0xB3, 4, _T("CMPU"),  EXT    },
@@ -660,7 +660,7 @@ uint32_t MC6809::cpu_disassemble_m6809(_TCHAR *buffer, uint32_t pc, const uint8_
 		}
 		break;
 
-	case DIR:
+	case DIR_:
 		ea = operandarray[0];
 		buffer += _stprintf(buffer, _T("$%02X"), ea);
 		break;

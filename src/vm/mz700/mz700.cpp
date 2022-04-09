@@ -56,7 +56,6 @@
 #if defined(_MZ700) || defined(_MZ1500)
 #include "joystick.h"
 #endif
-
 // ----------------------------------------------------------------------------
 // initialize
 // ----------------------------------------------------------------------------
@@ -716,12 +715,17 @@ bool VM::process_state(FILEIO* state_fio, bool loading)
 	}
 	for(DEVICE* device = first_device; device; device = device->next_device) {
 #if defined (_DEVTERM)
-		const char *name = typeid(*device).name() + 1; // skip length
+		int offset = 1;
+		if((int)strlen(typeid(*device).name()) > 10){
+			offset = 2;
+		}
+		//5EVENT -> EVNET
+		//10SCSI_CDROM -> SCSI_CDROM
+		const _TCHAR *name = char_to_tchar(typeid(*device).name() + offset); // skip length
 #else
-	const char *name = typeid(*device).name() + 6; // skip "class "
+		const _TCHAR *name = char_to_tchar(typeid(*device).name() + 6); // skip "class "
 #endif
-		int len = (int)strlen(name);
-		printf("stateDeviceName:%s:%s\n",typeid(*device).name(),name);
+		int len = (int)_tcslen(name);
 		if(!state_fio->StateCheckInt32(len)) {
 			return false;
 		}

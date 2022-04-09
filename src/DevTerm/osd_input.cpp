@@ -43,13 +43,14 @@ void OSD::initialize_input()
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
 	// ジョイスティックが存在するかチェックする
-	if (SDL_NumJoysticks() > 0) {
-	    // ジョイスティックを開く
-	    joy = SDL_JoystickOpen(0);
+	int numJoysticks = SDL_NumJoysticks();
+	if (numJoysticks > 0) {
+	    // ジョイスティックを開く。外付けされた場合を考えて、一番大きな番号の物を開く
+	    joy = SDL_JoystickOpen(numJoysticks -1);
 	
 	    if (joy) {
-        	printf("Open JoyStick 0\n");
-        	printf("名前: %s\n", SDL_JoystickNameForIndex(0));
+        	printf("Open JoyStick :%d\n", numJoysticks - 1);
+        	printf("名前: %s\n", SDL_JoystickNameForIndex(numJoysticks - 1));
         	printf("軸の数: %d\n", SDL_JoystickNumAxes(joy));
         	printf("ボタンの数: %d\n", SDL_JoystickNumButtons(joy));
         	printf("ボールの数: %d\n", SDL_JoystickNumBalls(joy));

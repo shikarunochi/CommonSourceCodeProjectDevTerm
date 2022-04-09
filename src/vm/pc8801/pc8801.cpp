@@ -914,6 +914,12 @@ uint32_t VM::is_floppy_disk_accessed()
 	return status;
 }
 
+uint32_t VM::floppy_disk_indicator_color()
+{
+	return ((pc88fdc_sub->get_drive_type(0) == DRIVE_TYPE_2HD) ? 1 : 0) |
+	       ((pc88fdc_sub->get_drive_type(1) == DRIVE_TYPE_2HD) ? 2 : 0);
+}
+
 UPD765A *VM::get_floppy_disk_controller(int drv)
 {
 	if(drv == 0 || drv == 1) {
@@ -1007,12 +1013,17 @@ bool VM::process_state(FILEIO* state_fio, bool loading)
 	}
 	for(DEVICE* device = first_device; device; device = device->next_device) {
 #if defined (_DEVTERM)
-		const char *name = typeid(*device).name() + 1; // skip length
+		int offset = 1;
+		if((int)strlen(typeid(*device).name()) > 10){
+			offset = 2;
+		}
+		//5EVENT -> EVNET
+		//10SCSI_CDROM -> SCSI_CDROM
+		const _TCHAR *name = char_to_tchar(typeid(*device).name() + offset); // skip length
 #else
-	const char *name = typeid(*device).name() + 6; // skip "class "
+		const _TCHAR *name = char_to_tchar(typeid(*device).name() + 6); // skip "class "
 #endif
-		int len = (int)strlen(name);
-		
+		int len = (int)_tcslen(name);
 		if(!state_fio->StateCheckInt32(len)) {
 			return false;
 		}

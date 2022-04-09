@@ -113,8 +113,7 @@ void initialize_config()
 	#else
 		config.sound_frequency = 6;	// 48KHz
 	#endif
-	//config.sound_latency = 1;	// 100msec
-	config.sound_latency = 0;	// 50msec
+	config.sound_latency = 1;	// 100msec
 	config.sound_strict_rendering = true;
 	#ifdef USE_FLOPPY_DISK
 		config.sound_noise_fdd = true;
@@ -196,8 +195,8 @@ void load_config(const _TCHAR* config_path)
 		config.monitor_type = MyGetPrivateProfileInt(_T("Control"), _T("MonitorType"), config.monitor_type, config_path);
 	#endif
 	#ifdef USE_SCANLINE
-//		config.scan_line = MyGetPrivateProfileBool(_T("Control"), _T("ScanLine"), config.scan_line, config_path);
-//		config.scan_line_auto = MyGetPrivateProfileBool(_T("Control"), _T("ScanLineAuto"), config.scan_line_auto, config_path);
+		config.scan_line = MyGetPrivateProfileBool(_T("Control"), _T("ScanLine"), config.scan_line, config_path);
+		config.scan_line_auto = MyGetPrivateProfileBool(_T("Control"), _T("ScanLineAuto"), config.scan_line_auto, config_path);
 	#endif
 	#ifdef USE_PRINTER
 		config.printer_type = MyGetPrivateProfileInt(_T("Control"), _T("PrinterType"), config.printer_type, config_path);
@@ -298,7 +297,7 @@ void load_config(const _TCHAR* config_path)
 	#ifndef ONE_BOARD_MICRO_COMPUTER
 		config.window_mode = MyGetPrivateProfileInt(_T("Screen"), _T("WindowMode"), config.window_mode, config_path);
 		config.window_stretch_type = MyGetPrivateProfileInt(_T("Screen"), _T("WindowStretchType"), config.window_stretch_type, config_path);
-//		config.fullscreen_stretch_type = MyGetPrivateProfileInt(_T("Screen"), _T("FullScreenStretchType"), config.fullscreen_stretch_type, config_path);
+		config.fullscreen_stretch_type = MyGetPrivateProfileInt(_T("Screen"), _T("FullScreenStretchType"), config.fullscreen_stretch_type, config_path);
 		#ifdef USE_SCREEN_ROTATE
 			config.rotate_type = MyGetPrivateProfileInt(_T("Screen"), _T("RotateType"), config.rotate_type, config_path);
 		#endif
@@ -306,7 +305,7 @@ void load_config(const _TCHAR* config_path)
 	
 	// filter
 	#ifdef USE_SCREEN_FILTER
-//		config.filter_type = MyGetPrivateProfileInt(_T("Screen"), _T("FilterType"), config.filter_type, config_path);
+		config.filter_type = MyGetPrivateProfileInt(_T("Screen"), _T("FilterType"), config.filter_type, config_path);
 	#endif
 	
 	// sound
@@ -317,10 +316,8 @@ void load_config(const _TCHAR* config_path)
 		config.sound_noise_fdd = MyGetPrivateProfileBool(_T("Sound"), _T("NoiseFDD"), config.sound_noise_fdd, config_path);;
 	#endif
 	#ifdef USE_TAPE
-		//config.sound_noise_cmt = MyGetPrivateProfileBool(_T("Sound"), _T("NoiseCMT"), config.sound_noise_cmt, config_path);;
-		config.sound_noise_cmt = false;	
-		//config.sound_tape_signal = MyGetPrivateProfileBool(_T("Sound"), _T("TapeSignal"), config.sound_tape_signal, config_path);
-		config.sound_tape_signal = false;
+		config.sound_noise_cmt = MyGetPrivateProfileBool(_T("Sound"), _T("NoiseCMT"), config.sound_noise_cmt, config_path);;
+		config.sound_tape_signal = MyGetPrivateProfileBool(_T("Sound"), _T("TapeSignal"), config.sound_tape_signal, config_path);
 		config.sound_tape_voice = MyGetPrivateProfileBool(_T("Sound"), _T("TapeVoice"), config.sound_tape_voice, config_path);
 	#endif
 	#ifdef USE_SOUND_VOLUME
@@ -375,6 +372,7 @@ void load_config(const _TCHAR* config_path)
 	
 	// win32
 	#ifdef _WIN32
+		config.use_telnet = MyGetPrivateProfileBool(_T("Win32"), _T("UseTelnet"), config.use_telnet, config_path);
 		#ifndef ONE_BOARD_MICRO_COMPUTER
 			config.use_d2d1 = MyGetPrivateProfileBool(_T("Win32"), _T("UseDirect2D1"), config.use_d2d1, config_path);
 			config.use_d3d9 = MyGetPrivateProfileBool(_T("Win32"), _T("UseDirect3D9"), config.use_d3d9, config_path);
@@ -587,6 +585,7 @@ void save_config(const _TCHAR* config_path)
 	
 	// win32
 	#ifdef _WIN32
+		MyWritePrivateProfileBool(_T("Win32"), _T("UseTelnet"), config.use_telnet, config_path);
 		#ifndef ONE_BOARD_MICRO_COMPUTER
 			MyWritePrivateProfileBool(_T("Win32"), _T("UseDirect2D1"), config.use_d2d1, config_path);
 			MyWritePrivateProfileBool(_T("Win32"), _T("UseDirect3D9"), config.use_d3d9, config_path);
